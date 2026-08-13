@@ -11,13 +11,7 @@
 
 <title>Captain 21 - Vegas Royalty Edition</title>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-<link
-    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Space+Grotesk:wght@400;700&display=swap"
-    rel="stylesheet"
->
+<!-- Local/system fonts: no external font request, so GitHub Pages can render immediately. -->
 
 <style>
 
@@ -117,11 +111,15 @@ button {
 
 body {
 
+    /* Avoid waiting on remote resources before first paint. */
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeSpeed;
+
     background-color: #010302;
 
     color: #ffffff;
 
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 
     letter-spacing: 1px;
 
@@ -347,7 +345,7 @@ body {
 
     align-items: center;
 
-    font-family: 'Cinzel', serif;
+    font-family: Georgia, 'Times New Roman', serif;
 
     font-size: 1.15rem;
 
@@ -450,7 +448,7 @@ body {
 
     border-radius: 10px;
 
-    font-family: 'Cinzel', serif;
+    font-family: Georgia, 'Times New Roman', serif;
 
     font-size: 0.95rem;
 
@@ -565,7 +563,7 @@ body {
 
     line-height: 1;
 
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 
 }
 
@@ -590,7 +588,7 @@ body {
 
     justify-content: center;
 
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 
     font-size: 1.6rem;
 
@@ -1106,7 +1104,7 @@ body {
 
 .status-box {
 
-    font-family: 'Cinzel', serif;
+    font-family: Georgia, 'Times New Roman', serif;
 
     font-size: 1.3rem;
 
@@ -1613,7 +1611,7 @@ input:focus-visible {
 .addon-dialog h2 {
     margin: 0;
     color: var(--gold-bright);
-    font-family: 'Cinzel', serif;
+    font-family: Georgia, 'Times New Roman', serif;
     font-size: 1.15rem;
     letter-spacing: 2px;
 }
@@ -1955,7 +1953,7 @@ body.addon-reduced-motion *::after {
     right: 4px;
     bottom: 1px;
     color: rgba(75,41,4,.72);
-    font-family: 'Cinzel', serif;
+    font-family: Georgia, 'Times New Roman', serif;
     font-size: .55rem;
     font-weight: 900;
 }
@@ -2155,6 +2153,27 @@ body.addon-light .addon-close {
     .court-portrait {
         inset: 26px 5px 24px;
     }
+}
+
+
+/* =========================================================
+   iOS TAP SAFETY
+   Keep normal taps/clicks reliable without a global touchend
+   preventDefault(), which can interfere with Safari.
+========================================================= */
+html,
+body {
+    touch-action: manipulation;
+}
+
+button,
+input,
+select,
+textarea,
+a,
+.card-slot {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
 }
 
 </style>
@@ -2662,7 +2681,7 @@ body.addon-light .addon-close {
                 id="addon-close"
                 type="button"
                 aria-label="Close dialog"
-            >Ã</button>
+            >×</button>
         </div>
         <div id="addon-modal-content"></div>
     </div>
@@ -2683,29 +2702,7 @@ body.addon-light .addon-close {
 let lastTouchEnd = 0;
 
 
-document.addEventListener(
-    'touchend',
-    function(event) {
 
-        const now =
-            Date.now();
-
-        if (
-            now - lastTouchEnd <= 300
-        ) {
-
-            event.preventDefault();
-
-        }
-
-        lastTouchEnd =
-            now;
-
-    },
-    {
-        passive: false
-    }
-);
 
 
 /*
@@ -4216,7 +4213,7 @@ function playRound() {
 
 
                 status.innerHTML =
-                    `ð CAPTAIN 21 (+${winnings.toFixed(2)}$) ð`;
+                    `👑 CAPTAIN 21 (+${winnings.toFixed(2)}$) 👑`;
 
 
                 playSoundEffect(
@@ -4509,16 +4506,16 @@ document.addEventListener(
         const history = addonState.history.length
             ? addonState.history.map(item => `
                 <li>
-                    <span>R${item.round} Â· ${escapeHtml(item.result)}</span>
+                    <span>R${item.round} · ${escapeHtml(item.result)}</span>
                     <strong class="${item.net >= 0 ? 'win' : 'loss'}">
                         ${item.net >= 0 ? '+' : ''}${money(item.net)}$
                     </strong>
                 </li>
             `).join('')
-            : '<li><span>NO ROUNDS YET</span><strong>â</strong></li>';
+            : '<li><span>NO ROUNDS YET</span><strong>—</strong></li>';
         const badges = achievements().map(([name, unlocked]) => `
             <span class="achievement ${unlocked ? 'unlocked' : ''}">
-                ${unlocked ? 'UNLOCKED Â· ' : ''}${name}
+                ${unlocked ? 'UNLOCKED · ' : ''}${name}
             </span>
         `).join('');
 
@@ -4529,7 +4526,7 @@ document.addEventListener(
                 <div class="stat-card"><small>WIN RATE</small><strong>${winRate}%</strong></div>
                 <div class="stat-card"><small>NET PROFIT</small><strong class="${profitClass}">${addonState.profit >= 0 ? '+' : ''}${money(addonState.profit)}$</strong></div>
                 <div class="stat-card"><small>BEST STREAK</small><strong>${addonState.bestStreak}</strong></div>
-                <div class="stat-card"><small>BEST HAND</small><strong>${addonState.bestHand || 'â'}</strong></div>
+                <div class="stat-card"><small>BEST HAND</small><strong>${addonState.bestHand || '—'}</strong></div>
             </div>
             <div class="addon-section-title">ACHIEVEMENTS</div>
             <div class="achievement-row">${badges}</div>
@@ -4555,8 +4552,8 @@ document.addEventListener(
             </div>
             <div class="addon-section-title">BET ADJUSTER</div>
             <div class="quick-bet">
-                <button data-bet-adjust="-1" type="button">â1</button>
-                <button data-bet-adjust="-5" type="button">â5</button>
+                <button data-bet-adjust="-1" type="button">−1</button>
+                <button data-bet-adjust="-5" type="button">−5</button>
                 <button data-bet-adjust="5" type="button">+5</button>
                 <button data-bet-adjust="10" type="button">+10</button>
                 <button data-bet="2" type="button">CLEAR</button>
@@ -4678,7 +4675,7 @@ document.addEventListener(
 
     function exportSession() {
         const blob = new Blob([JSON.stringify({
-            app: 'Captain 21 Â· Vegas Royalty Edition',
+            app: 'Captain 21 · Vegas Royalty Edition',
             exportedAt: new Date().toISOString(),
             ...addonState
         }, null, 2)], { type: 'application/json' });
@@ -4771,7 +4768,7 @@ document.addEventListener(
         addonState.history = addonState.history.slice(0, 12);
         saveState();
         if (isCaptain || won) confetti();
-        if (addonState.rounds === 1) notify('FIRST HAND LOGGED Â· STATS SAVED');
+        if (addonState.rounds === 1) notify('FIRST HAND LOGGED · STATS SAVED');
     }
 
     /* Wrap the original deal entry point so the original rules and animation
@@ -4977,7 +4974,7 @@ document.addEventListener(
         challenge.classList.toggle('complete', complete);
         challenge.innerHTML = complete
             ? '<strong>DAILY CHALLENGE COMPLETE</strong>'
-            : `<strong>DAILY CHALLENGE</strong> Â· WIN 3 HANDS Â· ${cinematicState.challengeProgress}/3`;
+            : `<strong>DAILY CHALLENGE</strong> · WIN 3 HANDS · ${cinematicState.challengeProgress}/3`;
     }
 
     function courtMarkup(rank, red) {
